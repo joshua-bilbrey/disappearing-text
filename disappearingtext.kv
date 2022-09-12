@@ -1,0 +1,72 @@
+#:kivy 2.1.0
+
+<StartScreen>:
+    Spinner:
+        id: time_spinner
+        text: '1'
+        values: ('1', '2', '3', '5', '10', '15', '30', '60')
+        size_hint: None, None
+        size: 100, 50
+        center_x: self.parent.center_x - 50
+        y: self.parent.center_y + 60
+    Label:
+        text: 'Minute(s)'.upper()
+        size_hint: None, None
+        size: 100, 50
+        center_x: self.parent.center_x + 50
+        y: self.parent.center_y + 60
+    Button:
+        text: 'Start Writing'.upper()
+        size_hint: None, None
+        size: 200, 100
+        center: self.parent.center
+        on_press:
+            root.update_total_time()
+            root.manager.current = 'writing_screen'
+
+<WritingScreen>:
+    on_pre_enter:
+        root.restart()
+    Widget:
+        id: timer_rect
+        canvas:
+            Rectangle:
+                group: 'a'
+                size: 0, root.height * 0.01
+                pos: root.x, root.y
+                Color:
+                    rgba: 1, 1, 1, 1
+    Button:
+        id: restart_btn
+        text: 'r\ne\ns\nt\na\nr\nt'.upper()
+        size_hint: None, None
+        size: root.width * 0.1, root.height - (root.height * 0.01)
+        x: root.x
+        y: root.y + (root.height * 0.01)
+        on_press:
+            root.manager.current = 'start_screen'
+        disabled: True
+    EffectWidget:
+        id: effect_widget
+        TextInput:
+            id: text_area
+            background_color: 189/255, 195/255, 199/255, 1
+            multiline: True
+            size_hint: None, None
+            size: root.width * 0.8, root.height - (root.height * 0.01)
+            center_x: root.center_x
+            y: root.y + (root.height * 0.01)
+            on_focus:
+                root.start_typing()
+            on_text:
+                root.reset_time()
+    Button:
+        id: save_btn
+        text: 's\na\nv\ne\n \nf\ni\nl\ne'.upper()
+        size_hint: None, None
+        size: root.width * 0.1, root.height - (root.height * 0.01)
+        right: root.right
+        top: root.top
+        on_press:
+            root.save_file()
+        disabled: True
